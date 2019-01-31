@@ -67,13 +67,22 @@ class PythonSSHClient(AbstractSSHClient):
         return True
 
     def _login(self, username, password, look_for_keys=False):
-        try:
-            self.client.connect(self.config.host, self.config.port, username,
-                                password, look_for_keys=look_for_keys,
-                                allow_agent=look_for_keys,
-                                timeout=float(self.config.timeout))
-        except paramiko.AuthenticationException:
-            raise SSHClientException
+        if not password or (password == ''):
+            from contextlib import suppress
+            with suppress(paramiko.AuthenticationException):
+                self.client.connect(self.config.host, self.config.port, username,
+                                    password, look_for_keys=look_for_keys,
+                                    allow_agent=look_for_keys,
+                                    timeout=float(self.config.timeout))
+            self.client.get_transport().auth_none(username)
+        else:
+            try:
+                self.client.connect(self.config.host, self.config.port, username,
+                                    password, look_for_keys=look_for_keys,
+                                    allow_agent=look_for_keys,
+                                    timeout=float(self.config.timeout))
+            except paramiko.AuthenticationException:
+                raise SSHClientException
 
     def _login_with_public_key(self, username, key_file, password, allow_agent, look_for_keys):
         try:
