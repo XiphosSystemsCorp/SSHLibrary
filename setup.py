@@ -6,7 +6,7 @@ from os.path import abspath, dirname, join
 from setuptools import setup
 
 CURDIR = dirname(abspath(__file__))
-REQUIREMENTS = ['robotframework >= 3.0']
+REQUIREMENTS = ['robotframework >= 3.0', 'robotframework-scplibrary']
 if not sys.platform.startswith('java'):
     REQUIREMENTS.append('paramiko >= 1.15.3')
 with open(join(CURDIR, 'src', 'SSHLibrary', 'version.py')) as f:
