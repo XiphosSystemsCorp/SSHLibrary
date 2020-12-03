@@ -105,7 +105,8 @@ class PythonSSHClient(AbstractSSHClient):
                         transport.auth_none(username)
                     except:
                         pass
-                    transport.auth_password(username,password)
+                    if password:
+                        transport.auth_password(username,password)
                 except:
                     raise SSHClientException
         except paramiko.AuthenticationException:
